@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecCore.Services
+namespace RecCore.Models
 {
-    public interface IJobRequirementService
+    public class JobCategoryRequestModel
     {
     }
 }

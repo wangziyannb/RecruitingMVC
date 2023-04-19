@@ -17,7 +17,7 @@ namespace RecCore.Entities
     {
         public int Id { get; set; }
         public string TypeName { get; set; }
-
+        //Navigation property
         public List<EmployeeRequirementType> EmployeeRequirementTypes { get; set; }
     }
 }

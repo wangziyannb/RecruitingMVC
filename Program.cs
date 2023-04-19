@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using RecCore.Contracts.Repositories;
+using RecCore.Contracts.Services;
+
 using RecInfrastructure.Data;
 using RecInfrastructure.Repositories;
+using RecInfrastructure.Services;
+using Recruiting.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +22,9 @@ builder.Services.AddScoped<IJobCategoryRepository, JobCategoryRepository>();
 builder.Services.AddScoped<IJobRequirementRepository, JobRequirementRepository>();
 builder.Services.AddScoped<IStatusRepository, StatusRepository>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
+
+builder.Services.AddScoped<IJobRequirementService, JobRequirementService>();
+builder.Services.AddLogging();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,7 +41,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllerRoute(
     name: "index", pattern: "{controller=Home}/{action=Index}/{id?}");
 app.Run();
