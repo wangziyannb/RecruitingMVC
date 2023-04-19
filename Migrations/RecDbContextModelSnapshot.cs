@@ -41,7 +41,8 @@ namespace Recruiting.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
@@ -57,25 +58,17 @@ namespace Recruiting.Migrations
 
             modelBuilder.Entity("RecCore.Entities.EmployeeRequirementType", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("EmployeeTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("JobRequirementId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeTypeId");
+                    b.HasKey("EmployeeTypeId", "JobRequirementId");
 
                     b.HasIndex("JobRequirementId");
 
-                    b.ToTable("EmployeeRequirementTypes");
+                    b.ToTable("EmployeeRequirementTypes", (string)null);
                 });
 
             modelBuilder.Entity("RecCore.Entities.EmployeeType", b =>
@@ -88,11 +81,12 @@ namespace Recruiting.Migrations
 
                     b.Property<string>("TypeName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmployeeTypes");
+                    b.ToTable("EmployeeTypes", (string)null);
                 });
 
             modelBuilder.Entity("RecCore.Entities.JobCategory", b =>
@@ -105,7 +99,8 @@ namespace Recruiting.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.HasKey("Id");
 
@@ -133,16 +128,18 @@ namespace Recruiting.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HiringManagerId")
+                    b.Property<int?>("HiringManagerId")
                         .HasColumnType("int");
 
                     b.Property<string>("HiringManagerName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int>("JobCategoryId")
+                    b.Property<int?>("JobCategoryId")
                         .HasColumnType("int");
 
                     b.Property<int>("NumberOfPosition")
@@ -152,7 +149,9 @@ namespace Recruiting.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
@@ -235,7 +234,7 @@ namespace Recruiting.Migrations
                         .IsRequired();
 
                     b.HasOne("RecCore.Entities.JobRequirement", "JobRequirement")
-                        .WithMany("EmployeeRequirementType")
+                        .WithMany("EmployeeRequirementTypes")
                         .HasForeignKey("JobRequirementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -249,9 +248,7 @@ namespace Recruiting.Migrations
                 {
                     b.HasOne("RecCore.Entities.JobCategory", "JobCategory")
                         .WithMany("JobRequirements")
-                        .HasForeignKey("JobCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("JobCategoryId");
 
                     b.Navigation("JobCategory");
                 });
@@ -303,7 +300,7 @@ namespace Recruiting.Migrations
 
             modelBuilder.Entity("RecCore.Entities.JobRequirement", b =>
                 {
-                    b.Navigation("EmployeeRequirementType");
+                    b.Navigation("EmployeeRequirementTypes");
 
                     b.Navigation("Submissions");
                 });

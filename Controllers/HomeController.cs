@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Recruiting.Filters;
+using Recruiting.Models;
+using System.Diagnostics;
 
 namespace Recruiting.Controllers
 {
@@ -11,7 +13,7 @@ namespace Recruiting.Controllers
             this.logger = logger;
         }
 
-        [TypeFilter(typeof(Filter))]
+        //[TypeFilter(typeof(Filter))]
         public IActionResult Index()
         {
             return View();
@@ -22,10 +24,10 @@ namespace Recruiting.Controllers
             logger.LogInformation("abc");
             return View();
         }
-
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View();
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
